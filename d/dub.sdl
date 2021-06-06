@@ -1,0 +1,5 @@
+name "d"
+description "filtfilt's d implementation"
+authors "sozel"
+copyright "Copyright © 2021, sozel"
+license "proprietary"
