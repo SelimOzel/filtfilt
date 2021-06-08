@@ -3,6 +3,7 @@ module matrixd;
 // D
 import std.conv: to; 
 import std.math: sin;
+import std.random: dice;
 
 // Enums
 enum uint MAXROWS = 10;
@@ -51,6 +52,17 @@ Matrix sin(const Matrix matrix_IN) pure {
 		}
 	}
 	return sin_matrix;
+}
+
+// add random noise to each element
+Matrix noise(const Matrix matrix_IN, double mean, double var) {
+	Matrix noise_matrix = new Matrix(matrix_IN.Size()[0], matrix_IN.Size()[1], 0.0);
+	for(ulong r = 0; r < matrix_IN._nr; ++r) {
+		for(ulong c = 0; c < matrix_IN._nc; ++c) {
+			noise_matrix[r,c] = mean + var*2.0*(dice(0.5, 0.5)-0.5);
+		}
+	}
+	return noise_matrix;
 }
 
 // Lightweight
