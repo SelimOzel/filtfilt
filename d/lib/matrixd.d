@@ -2,13 +2,14 @@ module matrixd;
 
 // D
 import std.conv: to; 
+import std.math: sin;
 
 // Enums
-enum uint MAXROWS = 100;
-enum uint MAXCOLUMNS = 100;
+enum uint MAXROWS = 10;
+enum uint MAXCOLUMNS = 1001;
 
 // Output is csv
-string PrintMatrix(const Matrix matrix_IN) {
+string toCSV(const Matrix matrix_IN) {
 	string result;
 	for(ulong r = 0; r < matrix_IN._nr; ++r) {
 		for(ulong c = 0; c < matrix_IN._nc; ++c) {
@@ -18,6 +19,38 @@ string PrintMatrix(const Matrix matrix_IN) {
 		}
 	}
 	return result;
+}
+
+// vector output as double
+double[] toDouble_v(Matrix matrix_IN) {
+	double[] matrix_double;
+	for(ulong c = 0; c < matrix_IN._nc; ++c) {
+		matrix_double ~= matrix_IN._m[0][c];
+	}	
+	return matrix_double;
+}
+
+// matrix output as double
+double[][] toDouble_m(Matrix matrix_IN) {
+	double[][] matrix_double;
+	for(ulong r = 0; r < matrix_IN._nr; ++r) {
+		matrix_double ~= [[matrix_IN._m[r][0]]];
+		for(ulong c = 1; c < matrix_IN._nc; ++c) {
+			matrix_double[r] ~= matrix_IN._m[r][c];
+		}
+	}	
+	return matrix_double;
+}
+
+// for each element in the matrix
+Matrix sin(const Matrix matrix_IN) pure {
+	Matrix sin_matrix = new Matrix(matrix_IN.Size()[0], matrix_IN.Size()[1], 0.0);
+	for(ulong r = 0; r < matrix_IN._nr; ++r) {
+		for(ulong c = 0; c < matrix_IN._nc; ++c) {
+			sin_matrix[r,c] = sin(matrix_IN._m[r][c]);
+		}
+	}
+	return sin_matrix;
 }
 
 // Lightweight
@@ -50,6 +83,23 @@ this(const double[] rowvectorRHS_IN) pure {
 			_m[r][c] = rowvectorRHS_IN[c];
 		}
 	}   	
+}
+
+// A = [1:10]
+this(const ulong[ulong] x) pure {
+	if(x.length == 1) {
+		foreach(val; x.keys) {
+			initialize(1, x[val]-val+1, 0.0);
+			for(ulong r = 0; r < _nr; ++r) {
+				for(ulong c = 0; c < _nc; ++c) {
+					_m[r][c] = c+val;
+				}
+			}   			
+		}
+	}
+	else {
+		throw new Exception("Associative array length must be 1.");
+	}
 }
 
 // A = [[x1, x2 ...], [y1, y2, ...]]
@@ -219,10 +269,14 @@ double opIndex(ulong r, ulong c) pure const {
 
 // [x1, x2, ...] = A[1]
 Matrix opIndex(ulong r) pure const {
-	Matrix row_vector = new Matrix(1, _nc, 0.0);
-	for (ulong c = 0; c<_nc; ++c) {
-		row_vector[0, c] = _m[r][c];
+	Matrix row_vector;
+	if(r < _nr) {
+		row_vector = new Matrix(1, _nc, 0.0);
+		for (ulong c = 0; c<_nc; ++c) {
+			row_vector[0, c] = _m[r][c];
+		}
 	}
+	else throw new Exception("Can't access row.");
 	return row_vector;
 }
 
@@ -237,8 +291,7 @@ Matrix T() pure const {
 	return transpose;
 }
 
-Matrix Inv() pure const
-{
+Matrix Inv() pure const {
 	ulong nr = Size()[0];
 	ulong nc = Size()[1];
 
@@ -410,5 +463,5 @@ void adjoint(ref Matrix adj) pure const
 
 ulong _nr = 0;
 ulong _nc = 0;
-double[MAXROWS][MAXCOLUMNS] _m;
+double[MAXCOLUMNS][MAXROWS] _m;
 }
