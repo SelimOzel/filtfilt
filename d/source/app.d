@@ -5,6 +5,66 @@ import plt = matplotlibd.pyplot;
 
 import matrixd;
 
+Matrix filter(const Matrix B, const Matrix A, const Matrix X, const Matrix Zi) {
+	Matrix filtered;
+
+	return filtered;
+}
+
+/*
+void filter(vectord B, vectord A, const vectord &X, vectord &Y, vectord &Zi)
+{
+    if (A.empty())
+    {
+        throw std::domain_error("The feedback filter coefficients are empty.");
+    }
+    if (std::all_of(A.begin(), A.end(), [](double coef){ return coef == 0; }))
+    {
+        throw std::domain_error("At least one of the feedback filter coefficients has to be non-zero.");
+    }
+    if (A[0] == 0)
+    {
+        throw std::domain_error("First feedback coefficient has to be non-zero.");
+    }
+
+    // Normalize feedback coefficients if a[0] != 1;
+    auto a0 = A[0];
+    if (a0 != 1.0)
+    {       
+        std::transform(A.begin(), A.end(), A.begin(), [a0](double v) { return v / a0; });
+        std::transform(B.begin(), B.end(), B.begin(), [a0](double v) { return v / a0; });
+    }
+
+    size_t input_size = X.size();
+    size_t filter_order = std::max(A.size(), B.size());
+    B.resize(filter_order, 0);
+    A.resize(filter_order, 0);  
+    Zi.resize(filter_order, 0);
+    Y.resize(input_size);
+
+    const double *x = &X[0];
+    const double *b = &B[0];  
+    const double *a = &A[0];
+    double *z = &Zi[0];
+    double *y = &Y[0];
+
+    for (size_t i = 0; i < input_size; ++i)
+    {
+        size_t order = filter_order - 1;
+        while (order)
+        {
+            if (i >= order)
+            {
+                z[order - 1] = b[order] * x[i - order] - a[order] * y[i - order] + z[order];
+            }
+            --order;
+        }
+        y[i] = b[0] * x[i] + z[0];
+    }
+    Zi.resize(filter_order - 1);
+}
+*/
+
 // filter: https://www.mathworks.com/help/matlab/ref/filter.html
 
 void main() {
@@ -21,8 +81,8 @@ void main() {
 	// Fig: unfiltered input 
 	plt.plot(Y.toDouble_v, "b-");
 	plt.plot(y_filter_out_cpp.toDouble_v, "r-");
-	plt.xlabel("Magnitude");
-	plt.ylabel("Samples");	
+	plt.xlabel("Samples");
+	plt.ylabel("Magnitude");	
 	plt.legend();
 	plt.grid();
 	plt.savefig("input_signal.png");
