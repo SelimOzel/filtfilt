@@ -6,9 +6,28 @@ import plt = matplotlibd.pyplot;
 import matrixd;
 
 Matrix filter(const Matrix B, const Matrix A, const Matrix X, const Matrix Zi) {
-	Matrix filtered;
+	Matrix filtered; // output
+
+	// input sanity
 	if(A.empty) {
 		throw new Exception("The feedback filter coefficients are empty.");
+	}
+	if(A.Size[0] > 1) {
+		throw new Exception("The feedback filter coefficients is not a row vector.");
+	}
+	bool all_zeros = true;
+	for(ulong c = 0; c<A.Size()[1]; ++c) {
+		if(A[0,c] != 0.0) {
+			all_zeros = false;
+			continue;
+		}
+	}
+	if(all_zeros) {
+		string msg = "At least one of the feedback filter coefficients has to be non-zero.";
+		throw new Exception(msg);
+	}
+	if(A[0,0] == 0.0) {
+		throw new Exception("First feedback coefficient has to be non-zero.");
 	}
 
 	return filtered;
