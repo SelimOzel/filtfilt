@@ -68,6 +68,9 @@ Matrix noise(const Matrix matrix_IN, double mean, double var) {
 // Lightweight
 class Matrix {
 public:
+this() {
+}
+
 // nxm filled with n
 this(
 	const ulong rowLength_IN, 
@@ -393,6 +396,12 @@ double Sum(const ulong r) pure const {
 // [rows, cols]
 ulong[2] Size() pure const {
 	return [_nr, _nc];
+}    
+
+// 0 rows, 0 cols is empty
+bool empty() pure const {
+	if(Size()[0] == 0 && Size()[1] == 0) return true;
+	else return false;
 }    
 
 private:

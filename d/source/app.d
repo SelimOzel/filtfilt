@@ -7,6 +7,9 @@ import matrixd;
 
 Matrix filter(const Matrix B, const Matrix A, const Matrix X, const Matrix Zi) {
 	Matrix filtered;
+	if(A.empty) {
+		throw new Exception("The feedback filter coefficients are empty.");
+	}
 
 	return filtered;
 }
