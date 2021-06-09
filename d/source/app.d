@@ -5,7 +5,7 @@ import plt = matplotlibd.pyplot;
 
 import matrixd;
 
-Matrix filter(const Matrix B, const Matrix A, const Matrix X, const Matrix Zi) {
+Matrix filter(Matrix B, Matrix A, const Matrix X, const Matrix Zi) {
 	Matrix filtered; // output
 
 	// input sanity
@@ -28,6 +28,16 @@ Matrix filter(const Matrix B, const Matrix A, const Matrix X, const Matrix Zi) {
 	}
 	if(A[0,0] == 0.0) {
 		throw new Exception("First feedback coefficient has to be non-zero.");
+	}
+
+	double a0 = A[0,0];
+	if(a0 != 1.0) {
+		for(ulong i = 0; i< A.Size()[0]; ++i) {
+			A[0,i] /= a0;
+		}
+		for(ulong i = 0; i< B.Size()[0]; ++i) {
+			B[0,i] /= a0;
+		}		
 	}
 
 	return filtered;
