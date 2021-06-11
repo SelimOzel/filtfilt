@@ -40,33 +40,15 @@ Matrix filter(Matrix B, Matrix A, const Matrix X, const Matrix Zi) {
 		}		
 	}
 
+	ulong input_size = X.Size()[0];
+	ulong filter_order = max(A.Size()[0], B.Size[0]);
+
 	return filtered;
 }
 
 /*
 void filter(vectord B, vectord A, const vectord &X, vectord &Y, vectord &Zi)
 {
-    if (A.empty())
-    {
-        throw std::domain_error("The feedback filter coefficients are empty.");
-    }
-    if (std::all_of(A.begin(), A.end(), [](double coef){ return coef == 0; }))
-    {
-        throw std::domain_error("At least one of the feedback filter coefficients has to be non-zero.");
-    }
-    if (A[0] == 0)
-    {
-        throw std::domain_error("First feedback coefficient has to be non-zero.");
-    }
-
-    // Normalize feedback coefficients if a[0] != 1;
-    auto a0 = A[0];
-    if (a0 != 1.0)
-    {       
-        std::transform(A.begin(), A.end(), A.begin(), [a0](double v) { return v / a0; });
-        std::transform(B.begin(), B.end(), B.begin(), [a0](double v) { return v / a0; });
-    }
-
     size_t input_size = X.size();
     size_t filter_order = std::max(A.size(), B.size());
     B.resize(filter_order, 0);
