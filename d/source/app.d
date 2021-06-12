@@ -6,6 +6,18 @@ import plt = matplotlibd.pyplot;
 
 import matrixd;
 
+void add_index_range(ulong[] indices, ulong beg, ulong end, ulong inc = 1) {
+    for (ulong i = beg; i <= end; i += inc) {
+       indices ~= (i);
+    }
+}
+
+void add_index_const(ulong[] indices, ulong value, ulong numel) {
+    while (numel--) {
+        indices ~= value;
+    }
+}
+
 Matrix filter(Matrix B, Matrix A, const Matrix X, const Matrix Zi) pure {
 	Matrix Y; // output
 
@@ -78,6 +90,45 @@ Matrix filter(Matrix B, Matrix A, const Matrix X, const Matrix Zi) pure {
 
 Matrix filtfilt(Matrix B, Matrix A, const Matrix X) {
 	Matrix Y; // output
+
+    ulong len = X.Size()[1]; // length of input
+    ulong na = A.Size()[1];
+    ulong nb = B.Size()[1];
+    ulong nfilt = (nb > na) ? nb : na;
+    ulong nfact = 3 * (nfilt - 1); // length of edge transients
+
+    if (len <= nfact) {
+    	string msg = "Input data too short! Data must have length more than 3 times filter order.";
+        throw new Exception(msg);
+    }
+
+    // set up filter's initial conditions to remove DC offset problems at the
+    // beginning and end of the sequence
+	Matrix b = new Matrix(1, nfilt, 0.0);
+	Matrix a = new Matrix(1, nfilt, 0.0);    
+	for(ulong i = 0; i<nfilt; ++i) {
+		if(i < B.Size()[1]) {
+			b[0,i] = B[0,i];
+		}
+		if(i < A.Size()[1]) {
+			a[0,i] = A[0,i];
+		}
+	}   
+
+    ulong[] rows, cols;
+    //rows = [1:nfilt-1           2:nfilt-1             1:nfilt-2];
+    add_index_range(rows, 0, nfilt - 2);
+    if (nfilt > 2) {
+        add_index_range(rows, 1, nfilt - 2);
+        add_index_range(rows, 0, nfilt - 3);
+    }
+    //cols = [ones(1,nfilt-1)         2:nfilt-1          2:nfilt-1];
+    add_index_const(cols, 0, nfilt - 1);
+    if (nfilt > 2) {       
+        add_index_range(cols, 1, nfilt - 2);
+        add_index_range(cols, 1, nfilt - 2);
+    }
+    // data = [1+a(2)         a(3:nfilt)        ones(1,nfilt-2)    -ones(1,nfilt-2)];    
 
 	return Y;
 }
