@@ -6,13 +6,13 @@ import plt = matplotlibd.pyplot;
 
 import matrixd;
 
-void add_index_range(ulong[] indices, ulong beg, ulong end, ulong inc = 1) {
+void add_index_range(ref ulong[] indices, ulong beg, ulong end, ulong inc = 1) {
     for (ulong i = beg; i <= end; i += inc) {
        indices ~= (i);
     }
 }
 
-void add_index_const(ulong[] indices, ulong value, ulong numel) {
+void add_index_const(ref ulong[] indices, ulong value, ulong numel) {
     while (numel--) {
         indices ~= value;
     }
@@ -129,6 +129,22 @@ Matrix filtfilt(Matrix B, Matrix A, const Matrix X) {
         add_index_range(cols, 1, nfilt - 2);
     }
     // data = [1+a(2)         a(3:nfilt)        ones(1,nfilt-2)    -ones(1,nfilt-2)];    
+
+    ulong klen = rows.length;
+    double[] data;
+    for(int i = 0; i<klen; ++i) {
+    	data ~= 0.0;
+    }
+
+    data[0] = 1.0 + a[0,1];  ulong j = 1;
+    if (nfilt > 2) {
+        for (ulong i = 2; i < nfilt; i++)
+            data[j++] = a[0, i];
+        for (ulong i = 0; i < nfilt - 2; i++)
+            data[j++] = 1.0;
+        for (ulong i = 0; i < nfilt - 2; i++)
+            data[j++] = -1.0;
+    }
 
 	return Y;
 }
