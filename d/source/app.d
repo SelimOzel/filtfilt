@@ -18,10 +18,10 @@ void add_index_const(ref ulong[] indices, ulong value, ulong numel) {
     }
 }
 
-ulong[] subvector_reverse(const ref ulong[] vec, ulong idx_end, ulong idx_start) {
-	ulong[] result;
+double[] subvector_reverse(const ref Matrix vec, ulong idx_end, ulong idx_start) {
+	double[] result;
 	for(ulong i = idx_start; i<idx_end+1; ++i) {
-		result ~= vec[i];
+		result ~= vec[0, i];
 	}
     return result.reverse;
 }
@@ -153,6 +153,9 @@ Matrix filtfilt(Matrix B, Matrix A, const Matrix X) {
         for (ulong i = 0; i < nfilt - 2; i++)
             data[j++] = -1.0;
     }
+
+    double[] leftpad = subvector_reverse(X, nfact, 1);
+    double _2x0 = 2 * X[0, 0];
 
 	return Y;
 }
