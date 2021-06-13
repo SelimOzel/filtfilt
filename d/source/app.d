@@ -156,6 +156,18 @@ Matrix filtfilt(Matrix B, Matrix A, const Matrix X) {
 
     double[] leftpad = subvector_reverse(X, nfact, 1);
     double _2x0 = 2 * X[0, 0];
+	for(ulong i = 0; i< leftpad.length; ++i) {
+		leftpad[i] = _2x0 - leftpad[i];
+	}
+
+	double[] rightpad = subvector_reverse(X, len - 2, len - nfact - 1);
+    double _2xl = 2 * X[0, len-1];
+	for(ulong i = 0; i< rightpad.length; ++i) {
+		rightpad[i] = _2xl - rightpad[i];
+	}
+
+    double y0;
+    double[] signal1, signal2, zi;
 
 	return Y;
 }
