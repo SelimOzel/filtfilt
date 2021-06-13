@@ -18,6 +18,10 @@ void add_index_const(ref ulong[] indices, ulong value, ulong numel) {
     }
 }
 
+void append_vector(ref double[] vec, ref double[] tail) {
+    vec ~= tail;
+}
+
 double[] subvector_reverse(const ref Matrix vec, ulong idx_end, ulong idx_start) {
 	double[] result;
 	for(ulong i = idx_start; i<idx_end+1; ++i) {
@@ -168,6 +172,13 @@ Matrix filtfilt(Matrix B, Matrix A, const Matrix X) {
 
     double y0;
     double[] signal1, signal2, zi;
+
+    double[] Xd = toDouble_v(X);
+    append_vector(signal1, leftpad);
+    append_vector(signal1, Xd);
+    append_vector(signal1, rightpad);    
+
+
 
 	return Y;
 }

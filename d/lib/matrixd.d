@@ -23,7 +23,7 @@ string toCSV(const Matrix matrix_IN) {
 }
 
 // vector output as double
-double[] toDouble_v(Matrix matrix_IN) {
+double[] toDouble_v(const Matrix matrix_IN) {
 	double[] matrix_double;
 	for(ulong c = 0; c < matrix_IN._nc; ++c) {
 		matrix_double ~= matrix_IN._m[0][c];
@@ -32,7 +32,7 @@ double[] toDouble_v(Matrix matrix_IN) {
 }
 
 // matrix output as double
-double[][] toDouble_m(Matrix matrix_IN) {
+double[][] toDouble_m(const Matrix matrix_IN) {
 	double[][] matrix_double;
 	for(ulong r = 0; r < matrix_IN._nr; ++r) {
 		matrix_double ~= [[matrix_IN._m[r][0]]];
