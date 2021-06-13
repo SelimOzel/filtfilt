@@ -1,4 +1,4 @@
-import std.algorithm: max;
+import std.algorithm: max, reverse;
 import std.math: PI;
 import std.stdio;
 
@@ -16,6 +16,14 @@ void add_index_const(ref ulong[] indices, ulong value, ulong numel) {
     while (numel--) {
         indices ~= value;
     }
+}
+
+ulong[] subvector_reverse(const ref ulong[] vec, ulong idx_end, ulong idx_start) {
+	ulong[] result;
+	for(ulong i = idx_start; i<idx_end+1; ++i) {
+		result ~= vec[i];
+	}
+    return result.reverse;
 }
 
 Matrix filter(Matrix B, Matrix A, const Matrix X, const Matrix Zi) pure {
