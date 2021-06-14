@@ -205,7 +205,21 @@ Matrix filtfilt(Matrix B, Matrix A, const Matrix X) {
     }
 
     // Do the forward and backward filtering
-
+    y0 = signal1[0];
+	for(ulong i = 0; i< zzi.Size()[1]; ++i) {
+		zi[i] = zzi[0, i] * y0;
+	}    
+	Matrix signal1_m = new Matrix(signal1);
+	Matrix zi_m = new Matrix(zi);
+    signal2 = toDouble_v(filter(B, A, signal1_m, zi_m));
+    signal2 = signal2.reverse;
+    y0 = signal2[0];
+	for(ulong i = 0; i< zzi.Size()[1]; ++i) {
+		zi[i] = zzi[0, i] * y0;
+	} 
+	Matrix signal2_m = new Matrix(signal2); 
+	signal1_m = filter(B, A, signal2_m, zi_m);
+	Y = new Matrix(subvector_reverse(signal1_m, signal1_m.Size()[1] - nfact - 1, nfact));
 	return Y;
 }
 
@@ -246,10 +260,10 @@ void main() {
 	// Fig - filtfilt: input, cpp out, dlang out
 	plt.plot(Y.toDouble_v, "b-");
 	plt.plot(y_filtfilt_out_cpp.toDouble_v, "r-");
-	//plt.plot(y_filter_out_d.toDouble_v, "g-");
+	plt.plot(y_filtfilt_d.toDouble_v, "g-");
 	plt.xlabel("Samples");
 	plt.ylabel("Magnitude");	
-	//plt.legend(["X", "Y_cpp", "Y_dlang"]);
+	plt.legend(["X", "Y_cpp", "Y_dlang"]);
 	plt.grid();
 	plt.savefig("result_filtfilt.png");
 	plt.clear();	
