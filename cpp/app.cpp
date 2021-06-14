@@ -169,7 +169,9 @@ void filtfilt(vectord B, vectord A, const vectord &X, vectord &Y)
     auto bb = VectorXd::Map(B.data(), B.size());
     auto aa = VectorXd::Map(A.data(), A.size());
     MatrixXd zzi = (sp.inverse() * (bb.segment(1, nfilt - 1) - (bb(0) * aa.segment(1, nfilt - 1))));
+    std::cout << "Here is the matrix zi:\n" << zi << std::endl;
     zi.resize(zzi.size());
+    std::cout << "Here is the matrix zi:\n" << zi << std::endl;
 
     // Do the forward and backward filtering
     y0 = signal1[0];

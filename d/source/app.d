@@ -191,8 +191,20 @@ Matrix filtfilt(Matrix B, Matrix A, const Matrix X) {
 	for(ulong i = 0; i<nfilt; ++i) {
 		aa[0,i] = a[0,i]; 
 	}	
-	// add inverse line here
+	Matrix bb_segment = new Matrix(1, nfilt-1, 0.0);
+	for(ulong i = 0; i<nfilt-1; ++i) {
+		bb_segment[0,i] = bb[0,i+1]; 
+	}	
+	Matrix aa_segment = new Matrix(1, nfilt-1, 0.0);
+	for(ulong i = 0; i<nfilt-1; ++i) {
+		aa_segment[0,i] = aa[0,i+1]; 
+	}		
+	Matrix zzi = sp.Inv()*(bb_segment - (aa_segment * bb[0,0])).T();
+    for(int i = 0; i<zzi.Size()[1]; ++i) {
+    	zi ~= 0.0;
+    }
 
+    // Do the forward and backward filtering
 
 	return Y;
 }
