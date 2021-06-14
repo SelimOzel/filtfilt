@@ -1,4 +1,4 @@
-import std.algorithm: max, reverse;
+import std.algorithm: max, reverse, maxElement;
 import std.math: PI;
 import std.stdio;
 
@@ -178,6 +178,20 @@ Matrix filtfilt(Matrix B, Matrix A, const Matrix X) {
     append_vector(signal1, Xd);
     append_vector(signal1, rightpad);    
 
+    // Calculate initial conditions
+    Matrix sp = new Matrix(rows.maxElement+1, cols.maxElement+1, 0.0);
+    for (ulong k = 0; k < klen; ++k) {
+        sp[rows[k], cols[k]] = data[k];
+    }    
+	Matrix bb = new Matrix(1, nfilt, 0.0);
+	for(ulong i = 0; i<nfilt; ++i) {
+		bb[0,i] = b[0,i]; 
+	}
+	Matrix aa = new Matrix(1, nfilt, 0.0);  
+	for(ulong i = 0; i<nfilt; ++i) {
+		aa[0,i] = a[0,i]; 
+	}	
+	// add inverse line here
 
 
 	return Y;
